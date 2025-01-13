@@ -1,4 +1,4 @@
 import emoji
 def Emoticon(text):
-    emoji.demojize(text)
+    return emoji.demojize(text)
     

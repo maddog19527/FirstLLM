@@ -7,7 +7,10 @@ import nltk
 import emoji
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+nltk.download("vader_lexicon")
+from textblob import TextBlob
+
 
 
 def CleanText(text):
@@ -23,11 +26,28 @@ def CleanText(text):
 
 def StopWordFunc(text):
     stop_words=set(stopwords.words('english'))
-    lemma=WordNetLemmatizer()
     work=word_tokenize(text)
     work=[word for word in work if word.lower() not in stop_words]
-    final_text=[lemma.lemmatize(word) for word in work]
-    return final_text
+    return work
 
+def list_features(text):
+    words=set(text)
+    features={}
+    for word in words:
+        features['contains({})'.format(word)]=(word in words)
+    return features
 
+def sentimentanalyzervader(text):
+  analyzer=SentimentIntensityAnalyzer()
+  return analyzer.polarity_scores(text)
 
+def sentimentTextBlob(text):
+  return TextBlob(text).sentiment.subjectivity
+
+def sentimentscoreTB(score):
+  if score > 0:
+    return 'positive'
+  elif score < 0:
+    return 'negative'
+  else:
+    return 'neutral'
